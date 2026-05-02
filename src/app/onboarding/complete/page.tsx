@@ -1,9 +1,9 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export default function OnboardingCompletePage() {
+function CompleteInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
@@ -52,5 +52,13 @@ export default function OnboardingCompletePage() {
         <p className="text-gray-400 text-sm">Connecting your store...</p>
       </div>
     </div>
+  )
+}
+
+export default function OnboardingCompletePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-950"/>}>
+      <CompleteInner />
+    </Suspense>
   )
 }
