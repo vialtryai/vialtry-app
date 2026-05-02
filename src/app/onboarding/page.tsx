@@ -31,8 +31,8 @@ export default function OnboardingPage() {
       shopify_domain: domain,
       shopify_access_token: accessToken,
       status: 'active',
-    })
-    if (dbError) { setError(dbError.message); setLoading(false); return }
+    } as never)
+    if (dbError) { setError((dbError as any).message); setLoading(false); return }
     router.push('/dashboard')
   }
 

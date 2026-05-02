@@ -8,6 +8,7 @@ export default async function AuditPage() {
   const {data:brands} = await supabase.from('brands').select('*').eq('user_id',user.id)
   if(!brands||brands.length===0) redirect('/onboarding')
   const brand = brands[0]
-  const audits = ((await supabase.from('audits').select('*, products(title,handle,shopify_product_id)').eq('brand_id',brand.id).eq('status','complete').order('created_at',{ascending:false})) as any).data
+  const audits = ((await supabase.from('audits').select('*, products(title,handle,shopify_product_id)').eq('brand_id', (brand as any).id).eq('status', 'complete' as never).order('created_at',{ascending:false})) as any).data
   return <AuditClient brand={brand} audits={audits||[]} />
 }
+
