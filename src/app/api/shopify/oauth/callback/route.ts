@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -31,25 +30,11 @@ export async function GET(request: Request) {
   })
   const { shop: shopData } = await shopRes.json()
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const params = new URLSearchParams({
+    shop,
+    token: access_token,
+    shopName: shopData.name,
+  })
 
-  if (!user) {
-    const params = new URLSearchParams({
-      shop,
-      token: access_token,
-      shopName: shopData.name,
-    })
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding/complete?${params}`)
-  }
-
-  await supabase.from('brands').insert({
-    user_id: user.id,
-    name: shopData.name,
-    shopify_domain: shop,
-    shopify_access_token: access_token,
-    status: 'active',
-  } as never)
-
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard`)
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding/complete?${params}`)
 }
