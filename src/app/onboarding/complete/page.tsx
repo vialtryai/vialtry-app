@@ -35,7 +35,8 @@ function CompleteInner() {
       } as never)
 
       if (error) {
-        router.push('/onboarding?error=save_failed')
+        console.error('Supabase insert error:', JSON.stringify(error))
+        router.push('/onboarding?error=' + encodeURIComponent(error.message))
         return
       }
 
