@@ -5,8 +5,8 @@ export default async function DashboardPage(){
   const supabase=await createClient()
   const {data:{user}}=await supabase.auth.getUser()
   if(!user)redirect('/login')
-  const {data:brands}=await supabase.from('brands').select('*').eq('user_id',user.id)
-  if(!brands||brands.length===0)redirect('/onboarding')
+  const {data:brands} = await supabase.from('brands').select('*').limit(1)
+if(!brands || brands.length===0) redirect('/onboarding')
   const brand=brands[0]
   const {data:audits}=await supabase.from('audits').select('*,products(title)').eq('brand_id',brand.id).eq('status','complete').order('created_at',{ascending:false}).limit(10)
   const {data:sovResults}=await supabase.from('sov_results').select('brand_mentioned,created_at').eq('brand_id',brand.id).order('created_at',{ascending:false}).limit(30)
